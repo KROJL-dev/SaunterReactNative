@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "699369627677",
+    "project_id": "tribal-incline-309215",
+    "storage_bucket": "tribal-incline-309215.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699369627677:android:e7488cdf5992a6af5226f4",
+        "android_client_info": {
+          "package_name": "com.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699369627677-0qaau1f28r89kgg0affr68vjvb6v1ico.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5jwbnxlBPOOJkWaahJKC2USWmXcceU-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699369627677-0qaau1f28r89kgg0affr68vjvb6v1ico.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
