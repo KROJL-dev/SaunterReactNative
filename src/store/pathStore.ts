@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { action, makeAutoObservable, observable } from 'mobx';
-import _ from 'lodash'
+import _ from 'lodash';
 
 import { Path, IDirectionData } from 'models/path';
 
@@ -26,12 +26,24 @@ export default class TodoStore {
   };
 
   @action
+  changeFavorite = (id: string) => {
+    let newPathList = _.cloneDeep(this.pathList);
+    
+      newPathList.map((path) => {
+      if (path.id === id) {
+          path.isFavourite = !path.isFavourite
+      }
+    });
+    this.pathList = newPathList
+    
+  };
+
+  @action
   addPath = (
     title: string,
     description: string,
     currentCoodinatesInfo: IDirectionData
   ) => {
-    console.log('currentCoodinatesInfo', currentCoodinatesInfo.coordinate);
     this.pathList = [
       ...this.pathList,
       {
@@ -42,9 +54,5 @@ export default class TodoStore {
         directionData: _.cloneDeep(currentCoodinatesInfo),
       },
     ];
-    console.log('this.pathList', this.pathList);
-    this.pathList.map((path) => {
-      console.log('kek', path.directionData.coordinate);
-    });
   };
 }

@@ -76,6 +76,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                placeholder="title"
               />
             )}
             name="title"
@@ -96,6 +97,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
                 value={value}
                 w="100%"
                 style={styles.input}
+                placeholder="description"
               />
             )}
             name="description"
@@ -104,50 +106,57 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
         </Stack>
       </Container>
       <Stack space={4} w="100%">
-        <View>
-          <Map onClick={onClickMap}>
-            {directionData.coordinate.length
-              ? directionData.coordinate.map((coordinate) => (
-                  <Marker
-                    key={generateId()}
-                    coordinate={coordinate as unknown as LatLng}
-                  />
-                ))
-              : null}
-            {directionData.coordinate.length > 1 && (
-              <MapViewDirections
-                waypoints={directionData.coordinate}
-                origin={directionData.coordinate[0]}
-                destination={
-                  directionData.coordinate[directionData.coordinate.length - 1]
-                }
-                apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-                strokeWidth={6}
-                strokeColor="red"
-                optimizeWaypoints={false}
-                onReady={(result) => {
-                  setDirectionData({
-                    ...directionData,
-                    directionSize: result.distance,
-                  });
-                }}
-              />
-            )}
-          </Map>
-          {directionData.directionSize !== undefined && (
-            <Text style={{ width: 300, height: 100 }}>
-              Distance: {directionData.directionSize} km{' '}
-            </Text>
+        <Map onClick={onClickMap}>
+          {directionData.coordinate.length
+            ? directionData.coordinate.map((coordinate) => (
+                <Marker
+                  key={generateId()}
+                  coordinate={coordinate as unknown as LatLng}
+                />
+              ))
+            : null}
+          {directionData.coordinate.length > 1 && (
+            <MapViewDirections
+              waypoints={directionData.coordinate}
+              origin={directionData.coordinate[0]}
+              destination={
+                directionData.coordinate[directionData.coordinate.length - 1]
+              }
+              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
+              strokeWidth={6}
+              strokeColor="red"
+              optimizeWaypoints={false}
+              onReady={(result) => {
+                setDirectionData({
+                  ...directionData,
+                  directionSize: result.distance,
+                });
+              }}
+            />
           )}
-          <Button
-            onPress={() => {
-              setDirectionData({ coordinate: [], directionSize: 0 });
-            }}
-          >
-            Clear
-          </Button>
-        </View>
-        <Button onPress={handleSubmit(onSubmit)}>Submit</Button>
+        </Map>
+        <Center w="100%">
+          <Container w="100%">
+            <Stack space={4} w="100%">
+              {directionData.directionSize !== undefined && (
+                <Text style={{ alignSelf: 'stretch', height: 20 }}>
+                  Distance: {directionData.directionSize} km{' '}
+                </Text>
+              )}
+              <Button
+                w="100%"
+                onPress={() => {
+                  setDirectionData({ coordinate: [], directionSize: 0 });
+                }}
+              >
+                Clear maps
+              </Button>
+              <Button w="100%" onPress={handleSubmit(onSubmit)}>
+                Submit
+              </Button>
+            </Stack>
+          </Container>
+        </Center>
       </Stack>
     </Center>
   );

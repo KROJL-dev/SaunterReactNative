@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { Dimensions } from 'react-native';
 
@@ -6,19 +6,27 @@ import generateId from '../utils/generateId';
 
 import MapView, { Marker, LatLng, MapEvent, Camera } from 'react-native-maps';
 
+ 
 interface IProps {
   children?: any;
   onClick?: Function;
   coordinatesForMarker?: LatLng[];
   height?: number;
   weight?: number;
+  center?: LatLng;
 }
+ 
+const DEFAULTCENTER: LatLng = {
+  latitude: 48.46767671849983,
+  longitude: 35.05476746651536,
+};
 const Map: React.FC<IProps> = ({
   children,
   onClick,
   coordinatesForMarker,
   height = Dimensions.get('screen').height / 2.4,
   weight = Dimensions.get('screen').width,
+  center = DEFAULTCENTER
 }) => {
   const map = useRef<MapView>(null);
 
@@ -29,19 +37,10 @@ const Map: React.FC<IProps> = ({
         height: height,
         width: weight,
       }}
-      initialRegion={{
-        latitude: 47.78825,
-        longitude: 35.05754025013747,
-        latitudeDelta: 47.78844,
-        longitudeDelta: 35.05754025013747,
-      }}
       onMapReady={() => {
         map?.current?.getCamera().then((cam: Camera) => {
           cam.zoom = 13;
-          cam.center = {
-            latitude: 48.46927011975755,
-            longitude: 35.05287915753189,
-          };
+          cam.center = center;
           map?.current?.animateCamera(cam);
         });
       }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 
 import { Flex, Image, ScrollView, Text, View } from 'native-base';
@@ -10,20 +10,31 @@ import { observer } from 'mobx-react';
 import { useStore } from '../store/store';
 
 import { NavigationStackProp } from 'react-navigation-stack';
+ 
 
 interface IProps {
   path: Path;
   navigation?: NavigationStackProp<{ userId: string }>;
 }
 
+const FAVOURITEICON =
+  'https://image.flaticon.com/icons/png/512/1828/1828614.png';
+const NOTFAVOURITEICON =
+  'https://image.flaticon.com/icons/png/512/1828/1828970.png';
+const LOGO = 'https://image.flaticon.com/icons/png/512/44/44755.png';
+
 const PathCard: React.FC<IProps> = ({ path, navigation }) => {
   const { pathStore } = useStore();
 
+  const [currentIcon, setCurrentIcon] = useState<string>("")
+
   const onPressCard = () => {
-      console.log('kek', path.directionData.coordinate);
     pathStore.setCurrentCoordinatesForDisplay(path.directionData);
     navigation !== undefined && navigation.navigate('DisplayDirectionModal');
   };
+  useEffect(()=>{
+       path.isFavourite ? setCurrentIcon(FAVOURITEICON) : setCurrentIcon(NOTFAVOURITEICON)
+  },[path.isFavourite])
   return (
     <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={onPressCard}>
       <Flex
@@ -35,7 +46,7 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
       >
         <Image
           source={{
-            uri: 'https://image.flaticon.com/icons/png/512/44/44755.png',
+            uri: LOGO,
           }}
           alt="logo"
           style={style.image}
@@ -54,12 +65,25 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
           {path.directionData.directionSize}
         </Text>
       </Flex>
+      <TouchableOpacity
+        style={style.favouriteIcon}
+        onPress={() => pathStore.changeFavorite(path.id)}
+      >
+        <Image source={{ uri: currentIcon }} alt="Kek" w="100%" h="100%" />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 };
 export default observer(PathCard);
 
 const style = StyleSheet.create({
+  favouriteIcon: {
+    position: 'absolute',
+    right: 0,
+    bottom: 7,
+    width: 40,
+    height: 40,
+  },
   card: {
     marginBottom: 15,
     paddingHorizontal: 10,

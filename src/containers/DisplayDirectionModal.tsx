@@ -33,6 +33,7 @@ const DisplayDirectionModal: React.FC<{}> = () => {
       {coordinates !== undefined && (
         <Map
           coordinatesForMarker={coordinates}
+          center={coordinates[0]}
           height={Dimensions.get('screen').height}
         >
           <MapViewDirections

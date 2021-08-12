@@ -17,10 +17,7 @@ interface IProps {
 
 const MainPage: React.FC<IProps> = ({ navigation }) => {
   const { pathStore } = useStore();
-
-  useEffect(() => {
-    pathStore.pathList.map(path=>{console.log("pathCoord", path.directionData.coordinate)})
-  }, [pathStore.pathList]);
+ 
   return (
     <Center w={Dimensions.get('screen').width}>
       <Container w="100%">
