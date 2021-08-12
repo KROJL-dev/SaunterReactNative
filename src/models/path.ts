@@ -8,7 +8,6 @@ export interface Path {
   id: string;
   title: string;
   description: string;
- 
   isFavourite: boolean;
   directionData: IDirectionData;
 }

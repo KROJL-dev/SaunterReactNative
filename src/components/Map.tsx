@@ -1,93 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
-import { Text, View, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
-import MapView, { Marker, LatLng, MapEvent } from 'react-native-maps';
-
-import MapViewDirections, {
-  MapViewDirectionsWaypoints,
-} from 'react-native-maps-directions';
-import { Button } from 'native-base';
-
-import { observer } from 'mobx-react';
-
-import { useStore } from '../store/store';
 import generateId from '../utils/generateId';
 
-const Map: React.FC<{}> = () => {
-  const { pathStore } = useStore();
+import MapView, { Marker, LatLng, MapEvent, Camera } from 'react-native-maps';
 
-  const [coordinateDirection, setCoordinateDirection] = useState<
-    MapViewDirectionsWaypoints[]
-  >([]);
-  const [distance, setDistance] = useState<number>();
+interface IProps {
+  children?: any;
+  onClick?: Function;
+  coordinatesForMarker?: LatLng[];
+  height?: number;
+  weight?: number;
+}
+const Map: React.FC<IProps> = ({
+  children,
+  onClick,
+  coordinatesForMarker,
+  height = Dimensions.get('screen').height / 2.4,
+  weight = Dimensions.get('screen').width,
+}) => {
+  const map = useRef<MapView>(null);
 
-  let coordinate = {
-    latitude: 47.78825,
-    longitude: 35.05754025013747,
-    latitudeDelta: 47.78844,
-    longitudeDelta: 35.05754025013747,
-  };
-
-  useEffect(() => {
-    console.log('useeffect', distance);
-    if (distance !== undefined) {
-      pathStore.setCurrentCoordinatesInfo({
-        coordinate: coordinateDirection,
-        directionSize: distance,
-      });
-    }
-  }, [distance, coordinateDirection]);
-
-  const onClickMap = (e: MapEvent) => {
-    setCoordinateDirection([...coordinateDirection, e.nativeEvent.coordinate]);
-  };
   return (
-    <View>
-      <MapView
-        style={{
-          height: Dimensions.get('screen').height / 2.4,
-          width: Dimensions.get('screen').width,
-        }}
-        initialRegion={coordinate}
-        onPress={onClickMap}
-      >
-        {coordinateDirection.length
-          ? coordinateDirection.map((coordinate) => (
-              <Marker
-                key={generateId()}
-                coordinate={coordinate as unknown as LatLng}
-              />
-            ))
-          : null}
-        {coordinateDirection.length > 1 && (
-          <MapViewDirections
-            waypoints={coordinateDirection}
-            origin={coordinateDirection[0]}
-            destination={coordinateDirection[coordinateDirection.length - 1]}
-            apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-            strokeWidth={6}
-            strokeColor="red"
-            optimizeWaypoints={false}
-            onReady={(result) => {
-              setDistance(result.distance);
-            }}
+    <MapView
+      ref={map}
+      style={{
+        height: height,
+        width: weight,
+      }}
+      initialRegion={{
+        latitude: 47.78825,
+        longitude: 35.05754025013747,
+        latitudeDelta: 47.78844,
+        longitudeDelta: 35.05754025013747,
+      }}
+      onMapReady={() => {
+        map?.current?.getCamera().then((cam: Camera) => {
+          cam.zoom = 13;
+          cam.center = {
+            latitude: 48.46927011975755,
+            longitude: 35.05287915753189,
+          };
+          map?.current?.animateCamera(cam);
+        });
+      }}
+      onPress={(e: MapEvent) => {
+        onClick !== undefined && onClick(e);
+      }}
+    >
+      {coordinatesForMarker !== undefined &&
+        coordinatesForMarker.map((coordinate) => (
+          <Marker
+            key={generateId()}
+            coordinate={coordinate as unknown as LatLng}
           />
-        )}
-      </MapView>
-      {distance !== undefined && (
-        <Text style={{ width: 300, height: 100 }}>
-          Distance: {distance} km{' '}
-        </Text>
-      )}
-      <Button
-        onPress={() => {
-          setCoordinateDirection([]), setDistance(0);
-        }}
-      >
-        Clear
-      </Button>
-    </View>
+        ))}
+      {children !== undefined ? children : null}
+    </MapView>
   );
 };
-export default observer(Map);
+export default Map;

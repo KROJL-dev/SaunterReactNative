@@ -9,9 +9,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import MainPage from './containers/MainPage';
-import AddPathPage from './containers/AddPathPage';
-
-import { useStore } from './store/store';
+import AddPathModal from './containers/AddPathModal';
+import DisplayDirectionModal from './containers/DisplayDirectionModal';
+ 
 
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
@@ -26,13 +26,14 @@ const App: React.FC<{}> = () => {
       <NavigationContainer>
         <RootStack.Navigator>
           <RootStack.Group>
-            <RootStack.Screen
-              name="MainPage"
-              component={MainPage}
-            />
+            <RootStack.Screen name="MainPage" component={MainPage} />
           </RootStack.Group>
           <RootStack.Group screenOptions={{ presentation: 'modal' }}>
-            <RootStack.Screen name="AddPathPage" component={AddPathPage} />
+            <RootStack.Screen name="AddPathModal" component={AddPathModal} />
+            <RootStack.Screen
+              name="DisplayDirectionModal"
+              component={DisplayDirectionModal}
+            />
           </RootStack.Group>
         </RootStack.Navigator>
       </NavigationContainer>

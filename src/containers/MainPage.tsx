@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
 
 import { Container, Center, Button, Flex } from 'native-base';
@@ -18,17 +18,24 @@ interface IProps {
 const MainPage: React.FC<IProps> = ({ navigation }) => {
   const { pathStore } = useStore();
 
+  useEffect(() => {
+    pathStore.pathList.map(path=>{console.log("pathCoord", path.directionData.coordinate)})
+  }, [pathStore.pathList]);
   return (
     <Center w={Dimensions.get('screen').width}>
       <Container w="100%">
         <Center w="100%">
-            <Flex w="100%">
-                {pathStore.pathList.length? pathStore.pathList.map(path=><PathCard path={path} key={path.id}/>):null}
-            </Flex>
+          <Flex w="100%">
+            {pathStore.pathList.length
+              ? pathStore.pathList.map((path) => (
+                  <PathCard navigation={navigation} path={path} key={path.id} />
+                ))
+              : null}
+          </Flex>
           <Button
             w="100%"
             onPress={() => {
-              navigation.navigate('AddPathPage');
+              navigation.navigate('AddPathModal');
             }}
           >
             Add path

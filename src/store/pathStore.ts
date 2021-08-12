@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { action, makeAutoObservable, observable } from 'mobx';
+import _ from 'lodash'
 
 import { Path, IDirectionData } from 'models/path';
 
@@ -11,35 +12,39 @@ import generateId from '../utils/generateId';
 export default class TodoStore {
   rootStore: RootStore;
   @observable pathList: Path[] = [];
-  @observable currentCoodinatesInfo?: IDirectionData;
+
+  @observable currentCordinatesForDisplay?: IDirectionData;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
   @action
-  setCurrentCoordinatesInfo = (data: IDirectionData) => {
-    this.currentCoodinatesInfo = data;
+  setCurrentCoordinatesForDisplay = (data: IDirectionData) => {
+    this.currentCordinatesForDisplay = _.cloneDeep(data);
   };
 
   @action
-  addPath = (title: string, description: string) => {
-    if (
-      this.currentCoodinatesInfo !== undefined &&
-      this.currentCoodinatesInfo.coordinate.length >= 2
-    ) {
-      this.pathList = [
-        ...this.pathList,
-        {
-          title,
-          description,
-          isFavourite: false,
-          id: generateId(),
-          directionData: this.currentCoodinatesInfo,
-        },
-      ];
-    } else {
-      throw new Error('kek');
-    }
+  addPath = (
+    title: string,
+    description: string,
+    currentCoodinatesInfo: IDirectionData
+  ) => {
+    console.log('currentCoodinatesInfo', currentCoodinatesInfo.coordinate);
+    this.pathList = [
+      ...this.pathList,
+      {
+        title,
+        description,
+        isFavourite: false,
+        id: generateId(),
+        directionData: _.cloneDeep(currentCoodinatesInfo),
+      },
+    ];
+    console.log('this.pathList', this.pathList);
+    this.pathList.map((path) => {
+      console.log('kek', path.directionData.coordinate);
+    });
   };
 }
