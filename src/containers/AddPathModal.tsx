@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Center, Container, Input, Stack } from 'native-base';
+import { Center, Container, Input, Stack, Alert } from 'native-base';
 
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 
@@ -17,7 +17,6 @@ import { useStore } from '../store/store';
 import Map from '../components/Map';
 
 import { Marker, LatLng, MapEvent } from 'react-native-maps';
-
 
 import MapViewDirections, {
   MapViewDirectionsWaypoints,
@@ -43,26 +42,25 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
     formState: { errors },
   } = useForm();
 
-  const [directionData, setDirectionData] = useState<IDirectionData>({
-    coordinate: [],
-    directionSize: 0,
-  });
+  const [coordinate, setCoordinate] = useState<MapViewDirectionsWaypoints[]>(
+    []
+  );
+  const [directionSize, setDirectionSize] = useState<number>(0);
+ 
 
   const onSubmit = (data: onSumbitData) => {
-
+    const directionData = { coordinate, directionSize };
     pathStore.addPath(data.title, data.description, directionData);
     navigation.goBack();
   };
 
   const onClickMap = (e: MapEvent) => {
-    setDirectionData({
-      ...directionData,
-      coordinate: [...directionData?.coordinate, e.nativeEvent.coordinate],
-    });
+ 
+    setCoordinate([...coordinate, e.nativeEvent.coordinate]);
   };
 
   return (
-    <Center w={Dimensions.get('window').width}>
+    <Center w={Dimensions.get('window').width} style={{position:"absolute"}}>
       <Container w="100%" style={styles.container}>
         <Stack space={4} w="100%">
           <Controller
@@ -84,7 +82,25 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
             name="title"
             defaultValue=""
           />
-          {errors.firstName && <Text>This is required.</Text>}
+          {errors.title && (
+            <View>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -20,
+                  left: -40,
+                  width: Dimensions.get('screen').width,
+                  zIndex: 1212,
+                }}
+              >
+                <Alert w="100%">
+                  <Alert.Icon />
+                  <Alert.Title>EROR</Alert.Title>
+                  <Alert.Description>title is required</Alert.Description>
+                </Alert>
+              </View>
+            </View>
+          )}
 
           <Controller
             control={control}
@@ -105,34 +121,48 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
             name="description"
             defaultValue=""
           />
+          {errors.description && (
+            <View>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -20,
+                  left: -40,
+                  width: Dimensions.get('screen').width,
+                  zIndex: 1212,
+                }}
+              >
+                <Alert w="100%">
+                  <Alert.Icon />
+                  <Alert.Title>EROR</Alert.Title>
+                  <Alert.Description>description is required</Alert.Description>
+                </Alert>
+              </View>
+            </View>
+          )}
         </Stack>
       </Container>
       <Stack space={4} w="100%">
         <Map onClick={onClickMap}>
-          {directionData.coordinate.length
-            ? directionData.coordinate.map((coordinate) => (
+          {coordinate.length
+            ? coordinate.map((coordinate) => (
                 <Marker
                   key={generateId()}
                   coordinate={coordinate as unknown as LatLng}
                 />
               ))
             : null}
-          {directionData.coordinate.length > 1 && (
+          {coordinate.length > 1 && (
             <MapViewDirections
-              waypoints={directionData.coordinate}
-              origin={directionData.coordinate[0]}
-              destination={
-                directionData.coordinate[directionData.coordinate.length - 1]
-              }
+              waypoints={coordinate}
+              origin={coordinate[0]}
+              destination={coordinate[coordinate.length - 1]}
               apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
               strokeWidth={6}
               strokeColor="red"
               optimizeWaypoints={false}
               onReady={(result) => {
-                setDirectionData({
-                  ...directionData,
-                  directionSize: result.distance,
-                });
+                setDirectionSize(result.distance);
               }}
             />
           )}
@@ -140,15 +170,16 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
         <Center w="100%">
           <Container w="100%">
             <Stack space={4} w="100%">
-              {directionData.directionSize !== undefined && (
+              { directionSize !== undefined && (
                 <Text style={{ alignSelf: 'stretch', height: 20 }}>
-                  Distance: {directionData.directionSize} km{' '}
+                  Distance: { directionSize} km{' '}
                 </Text>
               )}
               <Button
                 w="100%"
                 onPress={() => {
-                  setDirectionData({ coordinate: [], directionSize: 0 });
+                  setDirectionSize(0);
+                  setCoordinate([])
                 }}
               >
                 Clear maps

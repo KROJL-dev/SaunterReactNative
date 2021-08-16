@@ -29,9 +29,6 @@ const Map: React.FC<IProps> = ({
 }) => {
   const map = useRef<MapView>(null);
 
-  useEffect(() => {
-    console.log('coordinatesForMarker', coordinatesForMarker);
-  }, [coordinatesForMarker]);
   return (
     <MapView
       ref={map}

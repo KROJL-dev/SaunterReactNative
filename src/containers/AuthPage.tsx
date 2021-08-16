@@ -10,10 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import AnimatedLoader from "react-native-animated-loader";
-
-
-import { Alert } from 'native-base';
+import { Alert, Center } from 'native-base';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import { useStore } from '../store/store';
@@ -28,21 +25,25 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [fetching, setFetching] = useState(false);
 
-  const [isValid, setValid] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const SignUp = () => {
     userStore.singIn(email, password);
+    setLoading(true);
   };
   const CreateUserValidasition = () => {
     userStore.createUser(email, password);
+    setLoading(true)
   };
 
   useEffect(() => {
     userStore.checkUserAfterturnOnApp();
+     
   }, []);
   useEffect(() => {
     if (userStore.isCurrentUser) {
       navigation?.navigate('MainPage');
+      setLoading(false);
     }
   }, [userStore.isCurrentUser]);
   return (
@@ -129,6 +130,18 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
           </View>
         </TouchableHighlight>
       </View>
+      {loading && (
+        <Center>
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            style={{
+              height: 150,
+              width: 150,
+            }}
+          />
+        </Center>
+      )}
     </SafeAreaView>
   );
 };
