@@ -23,6 +23,7 @@
     "react": "17.0.1",
     "react-hook-form": "^7.12.2",
     "react-native": "0.64.2",
+    "react-native-animated-loader": "^0.0.9",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-maps": "^0.28.0",
     "react-native-maps-directions": "^1.8.0",

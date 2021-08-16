@@ -16,7 +16,7 @@ export default class TodoStore {
 
   @observable currentUser?: IUser;
   @observable isCurrentUser: boolean = false;
-  @observable userError?: string;
+  @observable userError: string = '';
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
@@ -53,15 +53,21 @@ export default class TodoStore {
   validation = (email: string, password: string): boolean => {
     if (!email) {
       this.userError = 'Email required *';
-
+      setTimeout(() => {
+        this.userError = '';
+      }, 3000);
       return false;
     } else if (!password && password.trim() && password.length > 6) {
       this.userError = 'Weak password, minimum 5 chars';
-
+      setTimeout(() => {
+        this.userError = '';
+      }, 3000);
       return false;
     } else if (!this.isValidEmail(email)) {
       this.userError = 'Invalid Email';
-
+      setTimeout(() => {
+        this.userError = '';
+      }, 3000);
       return false;
     }
     return true;

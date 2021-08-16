@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 
 import Map from '../components/Map';
 
-import { LatLng } from 'react-native-maps';
+import { LatLng, Polyline } from 'react-native-maps';
 
 import { useStore } from '../store/store';
 
@@ -44,8 +44,9 @@ const DisplayDirectionModal: React.FC<{}> = () => {
             mode={'DRIVING'}
             strokeWidth={2}
             strokeColor="red"
-            optimizeWaypoints={false}
+            optimizeWaypoints={true}
             splitWaypoints={true}
+            strokeColors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
           />
         </Map>
       )}

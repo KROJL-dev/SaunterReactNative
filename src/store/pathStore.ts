@@ -45,6 +45,7 @@ export default class TodoStore {
         }
       });
       this.pathList = newPathList;
+      
       await AsyncStorage.setItem(
         `${this.rootStore.userStore.currentUser?.id}pathList`,
         JSON.stringify(this.pathList)

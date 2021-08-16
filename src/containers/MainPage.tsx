@@ -25,10 +25,11 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       if (userStore.isCurrentUser) {
+        
         let storagePaths = await AsyncStorage.getItem(
           `${userStore.currentUser?.id}pathList`
         );
-        console.log('storagePaths', storagePaths);
+
         if (storagePaths !== null) {
           pathStore.refreshPathList(
             JSON.parse(storagePaths) as unknown as IPath[]
@@ -56,6 +57,7 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
               : null}
           </Flex>
           <Button
+            w="100%"
             style={style.addBtn}
             onPress={() => {
               navigation.navigate('AddPathModal');

@@ -3,13 +3,17 @@ import { observer } from 'mobx-react';
 import {
   View,
   Text,
-  Alert,
+  Dimensions,
   TouchableHighlight,
   SafeAreaView,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 
+import AnimatedLoader from "react-native-animated-loader";
+
+
+import { Alert } from 'native-base';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import { useStore } from '../store/store';
@@ -23,7 +27,7 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState('');
+
   const [isValid, setValid] = useState(true);
 
   const SignUp = () => {
@@ -55,7 +59,6 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
           keyboardType="email-address"
           placeholder="Mail address"
           onChangeText={(text) => {
-            setError;
             setEmail(text);
           }}
         />
@@ -66,11 +69,7 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      {error ? (
-        <View>
-          <Text>{error}</Text>
-        </View>
-      ) : null}
+
       <View>
         <TouchableHighlight onPress={SignUp}>
           <View
@@ -90,7 +89,6 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
           keyboardType="email-address"
           placeholder="Mail address"
           onChangeText={(text) => {
-            setError;
             setEmail(text);
           }}
         />
@@ -101,11 +99,24 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
       </View>
-      {error ? (
+      {userStore.userError !== '' ? (
         <View>
-          <Text>{error}</Text>
+          <View
+            style={{
+              position: 'absolute',
+              top: 50,
+              left: Dimensions.get('screen').width / 2 - 100,
+            }}
+          >
+            <Alert w="200">
+              <Alert.Icon />
+              <Alert.Title>EROR</Alert.Title>
+              <Alert.Description>{userStore.userError}</Alert.Description>
+            </Alert>
+          </View>
         </View>
       ) : null}
+
       <View>
         <TouchableHighlight onPress={CreateUserValidasition}>
           <View
