@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Center, Container, Input, Stack, Alert } from 'native-base';
 
@@ -22,7 +22,6 @@ import MapViewDirections, {
   MapViewDirectionsWaypoints,
 } from 'react-native-maps-directions';
 
-import { IDirectionData } from 'models/path';
 
 export interface IProps {
   navigation: NavigationStackProp<{ userId: string }>;
@@ -46,7 +45,6 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
     []
   );
   const [directionSize, setDirectionSize] = useState<number>(0);
- 
 
   const onSubmit = (data: onSumbitData) => {
     const directionData = { coordinate, directionSize };
@@ -55,12 +53,11 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
   };
 
   const onClickMap = (e: MapEvent) => {
- 
     setCoordinate([...coordinate, e.nativeEvent.coordinate]);
   };
 
   return (
-    <Center w={Dimensions.get('window').width} style={{position:"absolute"}}>
+    <Center w={Dimensions.get('window').width} style={{ position: 'absolute' }}>
       <Container w="100%" style={styles.container}>
         <Stack space={4} w="100%">
           <Controller
@@ -170,16 +167,16 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
         <Center w="100%">
           <Container w="100%">
             <Stack space={4} w="100%">
-              { directionSize !== undefined && (
+              {directionSize !== undefined && (
                 <Text style={{ alignSelf: 'stretch', height: 20 }}>
-                  Distance: { directionSize} km{' '}
+                  Distance: {directionSize} km{' '}
                 </Text>
               )}
               <Button
                 w="100%"
                 onPress={() => {
                   setDirectionSize(0);
-                  setCoordinate([])
+                  setCoordinate([]);
                 }}
               >
                 Clear maps

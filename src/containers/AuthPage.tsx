@@ -23,34 +23,31 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
   const { userStore } = useStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fetching, setFetching] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
-  const SignUp = () => {
+  const signUp = () => {
     userStore.singIn(email, password);
     setLoading(true);
   };
-  const CreateUserValidasition = () => {
+
+  const createUserValidasition = () => {
     userStore.createUser(email, password);
     setLoading(true)
   };
 
   useEffect(() => {
     userStore.checkUserAfterturnOnApp();
-     
   }, []);
+
   useEffect(() => {
     if (userStore.isCurrentUser) {
       navigation?.navigate('MainPage');
       setLoading(false);
     }
   }, [userStore.isCurrentUser]);
+
   return (
     <SafeAreaView>
-      <View style={{ flex: 0.2 }}>
-        {!!fetching && <ActivityIndicator color="blue" />}
-      </View>
       <View>
         <Text> Sign Up </Text>
       </View>
@@ -72,7 +69,7 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
       </View>
 
       <View>
-        <TouchableHighlight onPress={SignUp}>
+        <TouchableHighlight onPress={signUp}>
           <View
             style={{
               flexDirection: 'row',
@@ -119,7 +116,7 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
       ) : null}
 
       <View>
-        <TouchableHighlight onPress={CreateUserValidasition}>
+        <TouchableHighlight onPress={createUserValidasition}>
           <View
             style={{
               flexDirection: 'row',

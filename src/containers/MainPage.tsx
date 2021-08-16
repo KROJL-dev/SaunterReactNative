@@ -42,6 +42,7 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
       }
     })();
   }, [userStore.isCurrentUser]);
+  
   return (
     <Center
       w={Dimensions.get('screen').width}

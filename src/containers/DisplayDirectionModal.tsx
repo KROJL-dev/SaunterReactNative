@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 
 import Map from '../components/Map';
 
-import { LatLng, Polyline } from 'react-native-maps';
+import { LatLng } from 'react-native-maps';
 
 import { useStore } from '../store/store';
 

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 
 import { Dimensions } from 'react-native';
 
@@ -19,6 +19,7 @@ const DEFAULTCENTER: LatLng = {
   latitude: 48.46767671849983,
   longitude: 35.05476746651536,
 };
+
 const Map: React.FC<IProps> = ({
   children,
   onClick,

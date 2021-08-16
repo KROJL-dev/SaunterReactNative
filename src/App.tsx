@@ -3,7 +3,7 @@ import { LogBox, Button, AppRegistry } from 'react-native';
 
 import { observer } from 'mobx-react';
 
-import { NativeBaseProvider, Flex, Image } from 'native-base';
+import { NativeBaseProvider, Flex } from 'native-base';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';

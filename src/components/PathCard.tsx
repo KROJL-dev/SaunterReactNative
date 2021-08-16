@@ -32,9 +32,11 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
     pathStore.setCurrentCoordinatesForDisplay(path.directionData);
     navigation !== undefined && navigation.navigate('DisplayDirectionModal');
   };
+
   useEffect(()=>{
        path.isFavourite ? setCurrentIcon(FAVOURITEICON) : setCurrentIcon(NOTFAVOURITEICON)
   },[path.isFavourite])
+  
   return (
     <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={onPressCard}>
       <Flex
