@@ -11,13 +11,37 @@ import { useStore } from '../store/store';
 
 import PathCard from '../components/PathCard';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
+import { IPath } from 'models/path';
+
 interface IProps {
   navigation: NavigationStackProp<{ userId: string }>;
 }
 
 const MainPage: React.FC<IProps> = ({ navigation }) => {
-  const { pathStore } = useStore();
- 
+  const { pathStore, userStore } = useStore();
+
+  useEffect(() => {
+    if (pathStore.pathList.length === 0) {
+      navigation.navigate('AddPathModal');
+    }
+  }, []);
+  useEffect(() => {
+    (async () => {
+      if (!userStore.isCurrentUser) {
+        navigation?.navigate('AuthPage');
+        let storagePaths = await AsyncStorage.getItem(
+          `${userStore.currentUser?.id}pathList`
+        );
+        if (storagePaths !== null) {
+          pathStore.refreshPathList(
+            JSON.parse(storagePaths) as unknown as IPath[]
+          );
+        }
+      }
+    })();
+  }, [userStore.isCurrentUser]);
   return (
     <Center w={Dimensions.get('screen').width}>
       <Container w="100%">
@@ -29,14 +53,6 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
                 ))
               : null}
           </Flex>
-          <Button
-            w="100%"
-            onPress={() => {
-              navigation.navigate('AddPathModal');
-            }}
-          >
-            Add path
-          </Button>
         </Center>
       </Container>
     </Center>

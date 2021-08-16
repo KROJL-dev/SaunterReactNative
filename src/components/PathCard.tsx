@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 
 import { Flex, Image, ScrollView, Text, View } from 'native-base';
 
-import { Path } from '../models/path';
+import { IPath } from '../models/path';
 
 import { observer } from 'mobx-react';
 
@@ -13,7 +13,7 @@ import { NavigationStackProp } from 'react-navigation-stack';
  
 
 interface IProps {
-  path: Path;
+  path: IPath;
   navigation?: NavigationStackProp<{ userId: string }>;
 }
 
@@ -26,7 +26,7 @@ const LOGO = 'https://image.flaticon.com/icons/png/512/44/44755.png';
 const PathCard: React.FC<IProps> = ({ path, navigation }) => {
   const { pathStore } = useStore();
 
-  const [currentIcon, setCurrentIcon] = useState<string>("")
+  const [currentIcon, setCurrentIcon] = useState<string>(NOTFAVOURITEICON);
 
   const onPressCard = () => {
     pathStore.setCurrentCoordinatesForDisplay(path.directionData);

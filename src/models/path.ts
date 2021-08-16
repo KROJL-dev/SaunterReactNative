@@ -4,7 +4,7 @@ export interface IDirectionData {
   coordinate: MapViewDirectionsWaypoints[];
   directionSize:number;
 }
-export interface Path {
+export interface IPath {
   id: string;
   title: string;
   description: string;

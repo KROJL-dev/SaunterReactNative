@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Center, Container, Input, Stack } from 'native-base';
 
@@ -17,6 +17,7 @@ import { useStore } from '../store/store';
 import Map from '../components/Map';
 
 import { Marker, LatLng, MapEvent } from 'react-native-maps';
+
 
 import MapViewDirections, {
   MapViewDirectionsWaypoints,
@@ -48,6 +49,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
   });
 
   const onSubmit = (data: onSumbitData) => {
+
     pathStore.addPath(data.title, data.description, directionData);
     navigation.goBack();
   };
