@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 import { Container, Center, Button, Flex } from 'native-base';
 
@@ -23,36 +23,46 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
   const { pathStore, userStore } = useStore();
 
   useEffect(() => {
-    if (pathStore.pathList.length === 0) {
-      navigation.navigate('AddPathModal');
-    }
-  }, []);
-  useEffect(() => {
     (async () => {
-      if (!userStore.isCurrentUser) {
-        navigation?.navigate('AuthPage');
+      if (userStore.isCurrentUser) {
         let storagePaths = await AsyncStorage.getItem(
           `${userStore.currentUser?.id}pathList`
         );
+        console.log('storagePaths', storagePaths);
         if (storagePaths !== null) {
           pathStore.refreshPathList(
             JSON.parse(storagePaths) as unknown as IPath[]
           );
+        } else {
+          navigation.navigate('AddPathModal');
         }
+      } else {
+        navigation?.navigate('AuthPage');
       }
     })();
   }, [userStore.isCurrentUser]);
   return (
-    <Center w={Dimensions.get('screen').width}>
-      <Container w="100%">
-        <Center w="100%">
-          <Flex w="100%">
+    <Center
+      w={Dimensions.get('screen').width}
+      h={Dimensions.get('screen').height / -110}
+    >
+      <Container w="100%" h="99%">
+        <Center w="100%" h="100%">
+          <Flex w="100%" h="100%">
             {pathStore.pathList.length
               ? pathStore.pathList.map((path) => (
                   <PathCard navigation={navigation} path={path} key={path.id} />
                 ))
               : null}
           </Flex>
+          <Button
+            style={style.addBtn}
+            onPress={() => {
+              navigation.navigate('AddPathModal');
+            }}
+          >
+            Add path
+          </Button>
         </Center>
       </Container>
     </Center>
@@ -60,3 +70,10 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
 };
 
 export default observer(MainPage);
+
+const style = StyleSheet.create({
+  addBtn: {
+    position: 'absolute',
+    bottom: 0,
+  },
+});

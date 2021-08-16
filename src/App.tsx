@@ -15,9 +15,6 @@ import AuthPage from './containers/AuthPage';
 
 import { NavigationStackProp } from 'react-navigation-stack';
 
-import firebase from 'react-native-firebase';
-import firestore from '@react-native-firebase/firestore';
-
 import { useStore } from './store/store';
 
 interface IProps {
@@ -29,33 +26,13 @@ LogBox.ignoreAllLogs();
 
 AppRegistry.registerComponent('Kekoliandia', () => App);
 
-const App: React.FC<IProps> = ({ navigation }) => {
+const App: React.FC<IProps> = () => {
   const { userStore, pathStore } = useStore();
-
   const RootStack = createStackNavigator();
-   
+
   useEffect(() => {
-    // firebase
-    //   .auth()
-    //   .signInAnonymously()
-    //   .then(() => {
-    //     return firebase
-    //       .firestore()
-    //       .collection('Path')
-    //       .doc('3AvH1JJuI7YS6JmKxvbT')
-    //       .set({
-    //         id: 'fadsa',
-    //       });
-    //   }) 
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // const kek = firestore()
-    //   .collection('Path')
-    //   .doc('3AvH1JJuI7YS6JmKxvbT')
-    //   .get();
-    // console.log('kek', kek);
-  }, []);
+     userStore.checkUserAfterturnOnApp()
+  }, [ ]);
   return (
     <NativeBaseProvider>
       <NavigationContainer>
@@ -66,19 +43,13 @@ const App: React.FC<IProps> = ({ navigation }) => {
               name="MainPage"
               component={MainPage}
               options={{
-                headerLeft: () => (
-                  <Button
-                    title="Add path"
-                    onPress={() => {
-                      navigation.navigate('AddPathModal');
-                    }}
-                  />
-                ),
+                headerLeft: () => null,
                 headerRight: () => (
                   <Flex direction="row">
                     <Button
                       onPress={() => {
                         userStore.logout();
+                        pathStore.logoutPathList()
                       }}
                       title="Logout"
                     />

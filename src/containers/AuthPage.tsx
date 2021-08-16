@@ -13,7 +13,6 @@ import {
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import { useStore } from '../store/store';
- 
 
 interface IProps {
   navigation?: NavigationStackProp<{ userId: string }>;
@@ -36,7 +35,6 @@ const AuthPage: React.FC<IProps> = ({ navigation }) => {
 
   useEffect(() => {
     userStore.checkUserAfterturnOnApp();
-    
   }, []);
   useEffect(() => {
     if (userStore.isCurrentUser) {

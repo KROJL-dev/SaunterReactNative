@@ -9,8 +9,6 @@ import { RootStore } from './store';
 
 import generateId from '../utils/generateId';
 
- 
-
 export default class TodoStore {
   rootStore: RootStore;
   @observable pathList: IPath[] = [];
@@ -21,6 +19,11 @@ export default class TodoStore {
     this.rootStore = rootStore;
     makeAutoObservable(this);
   }
+
+  @action
+  logoutPathList = () => {
+    this.pathList = [];
+  };
 
   @action
   refreshPathList = (pathList: IPath[]) => {
@@ -57,9 +60,6 @@ export default class TodoStore {
     description: string,
     currentCoodinatesInfo: IDirectionData
   ) => {
-     
-     
-
     if (this.rootStore.userStore.currentUser !== undefined) {
       this.pathList = [
         ...this.pathList,
