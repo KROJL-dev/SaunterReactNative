@@ -20,15 +20,15 @@ const DisplayDirectionModal: React.FC<{}> = () => {
   const { pathStore, userStore } = useStore();
 
   const [coordinates, setCoordinates] = useState<LatLng[]>([]);
-  
+
   const [isStart, setIsStart] = useState<boolean>(true);
-   
+
   const [loading, setLoading] = useState<boolean>(false);
-  const [watchId,setWatchId] = useState<number>()
+  const [watchId, setWatchId] = useState<number>();
 
   const onPressStart = () => {
-    console.log("loading", loading)
-     
+    console.log('loading', loading);
+
     if (!isStart && watchId !== undefined) {
       setLoading(true);
       console.log('if');
@@ -45,11 +45,16 @@ const DisplayDirectionModal: React.FC<{}> = () => {
       });
       setWatchId(watchID);
     }
-     
+
     setIsStart(!isStart);
   };
-
- 
+  useEffect(() => {
+    return () => {
+      setIsStart(true);
+      userStore.unsetUserPosition();
+      setCoordinates([]);
+    };
+  }, []);
 
   useEffect(() => {
     let newCoordinates = _.cloneDeep(pathStore.currentCordinatesForDisplay);
@@ -58,7 +63,6 @@ const DisplayDirectionModal: React.FC<{}> = () => {
         (newCoord) => newCoord as unknown as LatLng
       );
       setCoordinates(newKek);
- 
     }
   }, [pathStore.currentCordinatesForDisplay]);
 
@@ -73,7 +77,11 @@ const DisplayDirectionModal: React.FC<{}> = () => {
           >
             <MapViewDirections
               waypoints={coordinates}
-              origin={userStore.userPosition!==undefined?userStore.userPosition:coordinates[0]}
+              origin={
+                userStore.userPosition !== undefined
+                  ? userStore.userPosition
+                  : coordinates[0]
+              }
               destination={coordinates[coordinates.length - 1]}
               apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
               mode={'DRIVING'}

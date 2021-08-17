@@ -36,7 +36,6 @@ const Map: React.FC<IProps> = ({
 }) => {
   const { userStore } = useStore();
   const map = useRef<MapView>(null);
-  const [currentlocation, setCurrentlocation] = useState<LatLng>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const [isFirstUserIcon, setIsFirstUserIcon] = useState<boolean>(false);
@@ -59,34 +58,8 @@ const Map: React.FC<IProps> = ({
     }
   }, [userStore.userPosition]);
 
-  useEffect(() => {
-    console.log('currentCoordinationForMarket', currentCoordinationForMarket);
-  }, [currentCoordinationForMarket]);
-  // useEffect(() => {
-  //   if (coordinatesForMarker !== undefined) {
-  //     setCurrentCoordinationForMarket([
-  //       ...currentCoordinationForMarket,
-  //       ...coordinatesForMarker,
-  //     ]);
-  //   }
-  //   if (!coordinatesForMarker?.length) {
-  //     setLoading(true);
-  //     getCurrentPos((latitude: number, longitude: number) => {
-  //       setLoading(false);
-  //       let position = {
-  //         latitude,
-  //         longitude,
-  //       };
-  //       map?.current?.getCamera().then((cam: Camera) => {
-  //         cam.zoom = 13;
-  //         cam.center = position;
-
-  //         map?.current?.animateCamera(cam);
-  //         setCurrentlocation(position);
-  //       });
-  //     });
-  //   }
-  // }, []);
+ 
+  useEffect(() => {coordinatesForMarker!==undefined&&setCurrentCoordinationForMarket(coordinatesForMarker);}, [coordinatesForMarker]);
 
   return (
     <View>
@@ -128,9 +101,7 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
-        {currentlocation !== undefined ? (
-          <Marker coordinate={currentlocation} />
-        ) : null}
+        
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (
               <Marker
