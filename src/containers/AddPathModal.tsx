@@ -22,7 +22,6 @@ import MapViewDirections, {
   MapViewDirectionsWaypoints,
 } from 'react-native-maps-directions';
 
-
 export interface IProps {
   navigation: NavigationStackProp<{ userId: string }>;
 }
@@ -140,29 +139,25 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
         </Stack>
       </Container>
       <Stack space={4} w="100%">
-        <Map onClick={onClickMap}>
-          {coordinate.length
-            ? coordinate.map((coordinate) => (
-                <Marker
-                  key={generateId()}
-                  coordinate={coordinate as unknown as LatLng}
-                />
-              ))
-            : null}
-          {coordinate.length > 1 && (
+        <Map
+          onClick={onClickMap}
+          coordinatesForMarker={coordinate as unknown as LatLng[]}
+        >
+          
+          {coordinate.length > 1 ? (
             <MapViewDirections
               waypoints={coordinate}
               origin={coordinate[0]}
               destination={coordinate[coordinate.length - 1]}
               apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-              strokeWidth={6}
+              strokeWidth={2}
               strokeColor="red"
               optimizeWaypoints={false}
               onReady={(result) => {
                 setDirectionSize(result.distance);
               }}
             />
-          )}
+          ):null}
         </Map>
         <Center w="100%">
           <Container w="100%">

@@ -15,6 +15,12 @@
     "strict": true,
     "target": "esnext"
   },
+  "filesGlob": [
+        "typings/**/*.d.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.tsx"
+    ],
   "exclude": [
     "node_modules",
     "babel.config.js",

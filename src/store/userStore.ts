@@ -10,6 +10,7 @@ import { RootStore } from './store';
 import generateId from '../utils/generateId';
 
 import auth from '@react-native-firebase/auth';
+import { LatLng } from 'react-native-maps';
 
 export default class TodoStore {
   rootStore: RootStore;
@@ -17,10 +18,21 @@ export default class TodoStore {
   @observable currentUser?: IUser;
   @observable isCurrentUser: boolean = false;
   @observable userError: string = '';
+
+  @observable userPosition?: LatLng;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
   }
+
+  @action
+  setUserPosition = (latitude: number, longitude: number) => {
+    this.userPosition = _.cloneDeep({ latitude, longitude });
+  };
+  @action
+  unsetUserPosition = () => {
+    this.userPosition = undefined;
+  };
   @action
   createUser = async (email: string, password: string) => {
     if (this.validation(email, password)) {

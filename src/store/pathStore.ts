@@ -14,7 +14,7 @@ export default class TodoStore {
   @observable pathList: IPath[] = [];
 
   @observable currentCordinatesForDisplay?: IDirectionData;
-
+  
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
