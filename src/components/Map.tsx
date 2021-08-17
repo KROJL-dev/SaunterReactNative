@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 
 import generateId from '../utils/generateId';
 
 import MapView, { Marker, LatLng, MapEvent, Camera } from 'react-native-maps';
+import { View, Center } from 'native-base';
+import { color } from 'styled-system';
 
 interface IProps {
   children?: any;
@@ -49,14 +51,30 @@ const Map: React.FC<IProps> = ({
       }}
     >
       {coordinatesForMarker !== undefined &&
-        coordinatesForMarker.map((coordinate) => (
+        coordinatesForMarker.map((coordinate, index) => (
           <Marker
             key={generateId()}
             coordinate={coordinate as unknown as LatLng}
-          />
+          >
+            <View style={style.marker}>
+              <Center>
+                <Text style={{ color: 'white', lineHeight:23 }}>{index+1}</Text>
+              </Center>
+            </View>
+          </Marker>
         ))}
       {children !== undefined ? children : null}
     </MapView>
   );
 };
 export default Map;
+
+const style = StyleSheet.create({
+  marker: {
+    backgroundColor: '#550bbc',
+    width: 25,
+    height: 25,
+    borderRadius: 12,
+     
+  },
+});

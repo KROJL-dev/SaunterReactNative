@@ -44,7 +44,7 @@ const DisplayDirectionModal: React.FC<{}> = () => {
             mode={'DRIVING'}
             strokeWidth={2}
             strokeColor="red"
-            optimizeWaypoints={true}
+            optimizeWaypoints={false}
             splitWaypoints={true}
             strokeColors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
           />

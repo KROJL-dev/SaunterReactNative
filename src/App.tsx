@@ -31,8 +31,9 @@ const App: React.FC<IProps> = () => {
   const RootStack = createStackNavigator();
 
   useEffect(() => {
-     userStore.checkUserAfterturnOnApp()
-  }, [ ]);
+    userStore.checkUserAfterturnOnApp();
+  }, []);
+
   return (
     <NativeBaseProvider>
       <NavigationContainer>
@@ -49,7 +50,7 @@ const App: React.FC<IProps> = () => {
                     <Button
                       onPress={() => {
                         userStore.logout();
-                        pathStore.logoutPathList()
+                        pathStore.logoutPathList();
                       }}
                       title="Logout"
                     />
