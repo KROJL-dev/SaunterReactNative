@@ -32,7 +32,6 @@ const RADIUS = 0.000012;
 const USERICON = 'https://image.flaticon.com/icons/png/512/106/106175.png';
 
 const Map: React.FC<IProps> = ({
-  children,
   onClick,
   coordinatesForMarker,
   height = Dimensions.get('screen').height / 2.4,
@@ -75,10 +74,10 @@ const Map: React.FC<IProps> = ({
 
       setCurrentCoordinationForMarket(currentCoordForMarkTempArr);
 
-      map?.current?.getCamera().then((cam: Camera) => {
+      map.current?.getCamera().then((cam: Camera) => {
         cam.zoom = 15;
         cam.center = currentCoordForMarkTempArr[0];
-        map?.current?.animateCamera(cam);
+        map.current?.animateCamera(cam);
       });
     } else {
       setIsFirstUserIcon(false);
@@ -90,10 +89,10 @@ const Map: React.FC<IProps> = ({
 
         setCurrentCoordinationForMarket(newCoordForDisp);
 
-        map?.current?.getCamera().then((cam: Camera) => {
+        map.current?.getCamera().then((cam: Camera) => {
           cam.zoom = 15;
           cam.center = newCoordForDisp[0];
-          map?.current?.animateCamera(cam);
+          map.current?.animateCamera(cam);
         });
       }
     }
@@ -118,7 +117,7 @@ const Map: React.FC<IProps> = ({
         }}
 
         onMapReady={() => {
-          map?.current?.getCamera().then((cam: Camera) => {
+          map.current?.getCamera().then((cam: Camera) => {
             cam.zoom = 15;
             if (coordinatesForMarker?.length) {
               cam.center = coordinatesForMarker[0];
@@ -188,9 +187,6 @@ const Map: React.FC<IProps> = ({
               </Marker>
             ))
           : null}
-
-        {children !== undefined ? children : null}
-        
       </MapView>
     </View>
   );
