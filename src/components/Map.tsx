@@ -75,7 +75,7 @@ const Map: React.FC<IProps> = ({
       setCurrentCoordinationForMarket(currentCoordForMarkTempArr);
 
       map.current?.getCamera().then((cam: Camera) => {
-        cam.zoom = 15;
+         
         cam.center = currentCoordForMarkTempArr[0];
         map.current?.animateCamera(cam);
       });
@@ -111,11 +111,9 @@ const Map: React.FC<IProps> = ({
           height: height,
           width: weight,
         }}
-
         onPress={(e: MapEvent) => {
           onClick !== undefined && onClick(e);
         }}
-
         onMapReady={() => {
           map.current?.getCamera().then((cam: Camera) => {
             cam.zoom = 15;
@@ -128,7 +126,7 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
-        {useMemo(
+        {currentCoordinationForMarket.length?useMemo(
           () => (
             <MapViewDirections
               waypoints={currentCoordinationForMarket}
@@ -155,7 +153,7 @@ const Map: React.FC<IProps> = ({
             />
           ),
           [currentCoordinationForMarket, userStore.userPosition]
-        )}
+        ):null}
 
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (

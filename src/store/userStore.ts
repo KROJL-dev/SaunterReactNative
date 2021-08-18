@@ -7,8 +7,6 @@ import { IUser } from '../models/user';
 
 import { RootStore } from './store';
 
-import generateId from '../utils/generateId';
-
 import auth from '@react-native-firebase/auth';
 import { LatLng } from 'react-native-maps';
 
@@ -92,6 +90,7 @@ export default class UserStore {
     this.currentUser = undefined;
     this.isCurrentUser = false;
   };
+
   @action
   singIn = async (email: string, password: string) => {
     if (this.validation(email, password)) {
@@ -112,6 +111,8 @@ export default class UserStore {
       }
     }
   };
+
+  @action
   checkUserAfterturnOnApp = async () => {
     let currentUser = await AsyncStorage.getItem('currentUser');
 

@@ -40,6 +40,7 @@ export default class PathStore {
     newPathList=newPathList.filter((path) => path.id !== id);
     this.pathList= newPathList
   }
+  
   @action
   changeFavorite = async (id: string) => {
     if (this.rootStore.userStore.currentUser !== undefined) {
