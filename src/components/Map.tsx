@@ -8,6 +8,7 @@ import { getCurrentPos } from '../utils/geolocationControl';
 import MapView, { Marker, LatLng, MapEvent, Camera } from 'react-native-maps';
 import { View, Center, Image } from 'native-base';
 
+import _ from 'lodash';
 import { useStore } from '../store/store';
 
 import { observer } from 'mobx-react';
@@ -25,7 +26,10 @@ const DEFAULTCENTER: LatLng = {
   longitude: 35.05476746651536,
 };
 
+const RADIUS = 0.000012;
+
 const USERICON = 'https://image.flaticon.com/icons/png/512/106/106175.png';
+
 const Map: React.FC<IProps> = ({
   children,
   onClick,
@@ -34,18 +38,33 @@ const Map: React.FC<IProps> = ({
   weight = Dimensions.get('screen').width,
   center = DEFAULTCENTER,
 }) => {
-  const { userStore } = useStore();
+  const { userStore, pathStore } = useStore();
   const map = useRef<MapView>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [isFirstUserIcon, setIsFirstUserIcon] = useState<boolean>(false);
   const [currentCoordinationForMarket, setCurrentCoordinationForMarket] =
     useState<LatLng[]>([]);
 
+  const checkUserPositionAtMarkers = (
+    markers: LatLng[],
+    userPosition: LatLng
+  ) => {
+    markers.map((marker, index) => {
+      let currentRadius =
+        Math.pow(userPosition.latitude - marker.latitude, 2) +
+        Math.pow(userPosition.longitude - marker.longitude, 2);
+      if (currentRadius <= RADIUS) {
+        markers.splice(index, 1);
+
+        return true;
+      }
+    });
+  };
   useEffect(() => {
     if (userStore.userPosition !== undefined && coordinatesForMarker?.length) {
-      console.log('useef if ', userStore.userPosition);
-
+      console.log(
+        checkUserPositionAtMarkers(coordinatesForMarker, userStore.userPosition)
+      );
       setIsFirstUserIcon(true);
       setCurrentCoordinationForMarket([
         { ...userStore.userPosition },
@@ -53,21 +72,30 @@ const Map: React.FC<IProps> = ({
       ]);
     } else {
       setIsFirstUserIcon(false);
-      coordinatesForMarker !== undefined &&
-        setCurrentCoordinationForMarket(coordinatesForMarker);
+     
+      if(pathStore.currentCordinatesForDisplay !== undefined) {
+        let newCoordForDisp = _.cloneDeep(pathStore.currentCordinatesForDisplay.coordinate);
+        setCurrentCoordinationForMarket(newCoordForDisp as unknown as LatLng[]);
+      }
     }
   }, [userStore.userPosition]);
 
- 
-  useEffect(() => {coordinatesForMarker!==undefined&&setCurrentCoordinationForMarket(coordinatesForMarker);}, [coordinatesForMarker]);
+  const kek = [
+    { latitude: 48.4617118, longitude: 35.04838763 },
+    { latitude: 48.4617518, longitude: 35.04839963 },
+  ];
+  useEffect(() => {
+    coordinatesForMarker !== undefined &&
+      setCurrentCoordinationForMarket(coordinatesForMarker);
+  }, [coordinatesForMarker]);
 
   return (
     <View>
-      <Center
+      {/* <Center
         style={{
           height: height,
           width: weight,
-          display: loading ? 'flex' : 'none',
+          // display: loading ? 'flex' : 'none',
         }}
       >
         <ActivityIndicator
@@ -78,20 +106,20 @@ const Map: React.FC<IProps> = ({
             width: 150,
           }}
         />
-      </Center>
+      </Center> */}
       <MapView
         ref={map}
         style={{
           height: height,
           width: weight,
-          opacity: +!loading,
+          // opacity: +!loading,
         }}
         onPress={(e: MapEvent) => {
           onClick !== undefined && onClick(e);
         }}
         onMapReady={() => {
           map?.current?.getCamera().then((cam: Camera) => {
-            cam.zoom = 13;
+            cam.zoom = 15;
             if (coordinatesForMarker?.length) {
               cam.center = coordinatesForMarker[0];
             } else {
@@ -101,7 +129,6 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
-        
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (
               <Marker
@@ -124,7 +151,7 @@ const Map: React.FC<IProps> = ({
                       />
                     ) : (
                       <Text style={{ color: 'white', lineHeight: 23 }}>
-                        {isFirstUserIcon?index:index+1}
+                        {isFirstUserIcon ? index : index + 1}
                       </Text>
                     )}
                   </Center>

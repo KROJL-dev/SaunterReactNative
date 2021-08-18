@@ -35,6 +35,10 @@ const DisplayDirectionModal: React.FC<{}> = () => {
       stopWatcher(watchId);
       userStore.unsetUserPosition();
       setLoading(false);
+      let newCoord = _.cloneDeep(
+        pathStore.currentCordinatesForDisplay?.coordinate
+      ); ;
+      setCoordinates(newCoord as unknown as LatLng[]);
     } else {
       setLoading(true);
       console.log('else');
@@ -52,6 +56,7 @@ const DisplayDirectionModal: React.FC<{}> = () => {
     return () => {
       setIsStart(true);
       userStore.unsetUserPosition();
+      setWatchId(undefined)
       setCoordinates([]);
     };
   }, []);

@@ -19,7 +19,7 @@ export const startWatcher = (succesCalbackFunction:Function)=>{
         );
       },
       (error) => console.log('Error', JSON.stringify(error)),
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
     );
 }
 export const stopWatcher = (watchId:number)=>{
