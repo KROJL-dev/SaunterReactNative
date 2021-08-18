@@ -35,6 +35,12 @@ export default class PathStore {
   };
 
   @action
+  deletePath = async(id:string)=>{
+    let newPathList = _.cloneDeep(this.pathList);
+    newPathList=newPathList.filter((path) => path.id !== id);
+    this.pathList= newPathList
+  }
+  @action
   changeFavorite = async (id: string) => {
     if (this.rootStore.userStore.currentUser !== undefined) {
       let newPathList = _.cloneDeep(this.pathList);
