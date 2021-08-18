@@ -12,7 +12,7 @@ import generateId from '../utils/generateId';
 import auth from '@react-native-firebase/auth';
 import { LatLng } from 'react-native-maps';
 
-export default class TodoStore {
+export default class UserStore {
   rootStore: RootStore;
 
   @observable currentUser?: IUser;

@@ -1,9 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 
-import { Dimensions, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 
 import generateId from '../utils/generateId';
-import { getCurrentPos } from '../utils/geolocationControl';
 
 import MapView, { Marker, LatLng, MapEvent, Camera } from 'react-native-maps';
 import { View, Center, Image } from 'native-base';
@@ -12,6 +11,8 @@ import _ from 'lodash';
 import { useStore } from '../store/store';
 
 import { observer } from 'mobx-react';
+
+import MapViewDirections from 'react-native-maps-directions';
 
 interface IProps {
   onClick?: Function;
@@ -39,11 +40,11 @@ const Map: React.FC<IProps> = ({
   center = DEFAULTCENTER,
 }) => {
   const { userStore, pathStore } = useStore();
+  
   const map = useRef<MapView>(null);
 
   const [isFirstUserIcon, setIsFirstUserIcon] = useState<boolean>(false);
-  const [currentCoordinationForMarket, setCurrentCoordinationForMarket] =
-    useState<LatLng[]>([]);
+  const [currentCoordinationForMarket, setCurrentCoordinationForMarket] = useState<LatLng[]>([]);
 
   const checkUserPositionAtMarkers = (
     markers: LatLng[],
@@ -56,34 +57,48 @@ const Map: React.FC<IProps> = ({
       if (currentRadius <= RADIUS) {
         markers.splice(index, 1);
 
-        return true;
+        return;
       }
     });
   };
+
   useEffect(() => {
     if (userStore.userPosition !== undefined && coordinatesForMarker?.length) {
-      console.log(
-        checkUserPositionAtMarkers(coordinatesForMarker, userStore.userPosition)
-      );
+      checkUserPositionAtMarkers(coordinatesForMarker, userStore.userPosition);
+
       setIsFirstUserIcon(true);
-      setCurrentCoordinationForMarket([
+
+      let currentCoordForMarkTempArr = [
         { ...userStore.userPosition },
         ...coordinatesForMarker,
-      ]);
+      ];
+
+      setCurrentCoordinationForMarket(currentCoordForMarkTempArr);
+
+      map?.current?.getCamera().then((cam: Camera) => {
+        cam.zoom = 15;
+        cam.center = currentCoordForMarkTempArr[0];
+        map?.current?.animateCamera(cam);
+      });
     } else {
       setIsFirstUserIcon(false);
-     
-      if(pathStore.currentCordinatesForDisplay !== undefined) {
-        let newCoordForDisp = _.cloneDeep(pathStore.currentCordinatesForDisplay.coordinate);
-        setCurrentCoordinationForMarket(newCoordForDisp as unknown as LatLng[]);
+
+      if (pathStore.currentCordinatesForDisplay !== undefined) {
+        let newCoordForDisp = _.cloneDeep(
+          pathStore.currentCordinatesForDisplay.coordinate
+        ) as unknown as LatLng[];
+
+        setCurrentCoordinationForMarket(newCoordForDisp);
+
+        map?.current?.getCamera().then((cam: Camera) => {
+          cam.zoom = 15;
+          cam.center = newCoordForDisp[0];
+          map?.current?.animateCamera(cam);
+        });
       }
     }
   }, [userStore.userPosition]);
 
-  const kek = [
-    { latitude: 48.4617118, longitude: 35.04838763 },
-    { latitude: 48.4617518, longitude: 35.04839963 },
-  ];
   useEffect(() => {
     coordinatesForMarker !== undefined &&
       setCurrentCoordinationForMarket(coordinatesForMarker);
@@ -91,32 +106,17 @@ const Map: React.FC<IProps> = ({
 
   return (
     <View>
-      {/* <Center
-        style={{
-          height: height,
-          width: weight,
-          // display: loading ? 'flex' : 'none',
-        }}
-      >
-        <ActivityIndicator
-          size="large"
-          color="#0000ff"
-          style={{
-            height: 150,
-            width: 150,
-          }}
-        />
-      </Center> */}
       <MapView
         ref={map}
         style={{
           height: height,
           width: weight,
-          // opacity: +!loading,
         }}
+
         onPress={(e: MapEvent) => {
           onClick !== undefined && onClick(e);
         }}
+
         onMapReady={() => {
           map?.current?.getCamera().then((cam: Camera) => {
             cam.zoom = 15;
@@ -129,6 +129,35 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
+        {useMemo(
+          () => (
+            <MapViewDirections
+              waypoints={currentCoordinationForMarket}
+              origin={
+                userStore.userPosition !== undefined
+                  ? userStore.userPosition
+                  : currentCoordinationForMarket[0]
+              }
+              destination={
+                currentCoordinationForMarket[
+                  currentCoordinationForMarket.length - 1
+                ]
+              }
+              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
+              mode={'DRIVING'}
+              strokeWidth={2}
+              strokeColor="red"
+              optimizeWaypoints={false}
+              splitWaypoints={true}
+              strokeColors={[
+                'rgba(255, 255, 255, 0.2)',
+                'rgba(255, 255, 255, 1)',
+              ]}
+            />
+          ),
+          [currentCoordinationForMarket, userStore.userPosition]
+        )}
+
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (
               <Marker
@@ -159,7 +188,9 @@ const Map: React.FC<IProps> = ({
               </Marker>
             ))
           : null}
+
         {children !== undefined ? children : null}
+        
       </MapView>
     </View>
   );

@@ -92,7 +92,11 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
                 <Alert w="100%">
                   <Alert.Icon />
                   <Alert.Title>EROR</Alert.Title>
-                  <Alert.Description>title is required</Alert.Description>
+                  <Alert.Description>
+                    {errors.title.type === 'maxLength'
+                      ? 'max length: 10'
+                      : 'title is required'}
+                  </Alert.Description>
                 </Alert>
               </View>
             </View>
@@ -131,7 +135,11 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
                 <Alert w="100%">
                   <Alert.Icon />
                   <Alert.Title>EROR</Alert.Title>
-                  <Alert.Description>description is required</Alert.Description>
+                  <Alert.Description>
+                    {errors.description.type === 'maxLength'
+                      ? 'max length: 160'
+                      : 'description is required'}
+                  </Alert.Description>
                 </Alert>
               </View>
             </View>
@@ -143,7 +151,6 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
           onClick={onClickMap}
           coordinatesForMarker={coordinate as unknown as LatLng[]}
         >
-          
           {coordinate.length > 1 ? (
             <MapViewDirections
               waypoints={coordinate}
@@ -157,7 +164,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
                 setDirectionSize(result.distance);
               }}
             />
-          ):null}
+          ) : null}
         </Map>
         <Center w="100%">
           <Container w="100%">

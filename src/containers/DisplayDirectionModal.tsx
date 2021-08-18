@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Dimensions, View, ActivityIndicator } from 'react-native';
 
 import { observer } from 'mobx-react';
@@ -27,24 +27,23 @@ const DisplayDirectionModal: React.FC<{}> = () => {
   const [watchId, setWatchId] = useState<number>();
 
   const onPressStart = () => {
-    console.log('loading', loading);
-
     if (!isStart && watchId !== undefined) {
       setLoading(true);
-      console.log('if');
       stopWatcher(watchId);
+
       userStore.unsetUserPosition();
+
       setLoading(false);
       let newCoord = _.cloneDeep(
         pathStore.currentCordinatesForDisplay?.coordinate
-      ); ;
+      );
+
       setCoordinates(newCoord as unknown as LatLng[]);
     } else {
       setLoading(true);
-      console.log('else');
+
       let watchID = startWatcher((latitude: number, longitude: number) => {
         userStore.setUserPosition(latitude, longitude);
-
         setLoading(false);
       });
       setWatchId(watchID);
@@ -52,11 +51,13 @@ const DisplayDirectionModal: React.FC<{}> = () => {
 
     setIsStart(!isStart);
   };
+
   useEffect(() => {
     return () => {
       setIsStart(true);
       userStore.unsetUserPosition();
-      setWatchId(undefined)
+      watchId !== undefined && stopWatcher(watchId);
+      setWatchId(undefined);
       setCoordinates([]);
     };
   }, []);
@@ -73,53 +74,31 @@ const DisplayDirectionModal: React.FC<{}> = () => {
 
   return (
     <View>
-      {coordinates.length ? (
-        <View>
-          <Map
-            coordinatesForMarker={coordinates}
-            center={coordinates[0]}
-            height={Dimensions.get('screen').height - 250}
-          >
-            <MapViewDirections
-              waypoints={coordinates}
-              origin={
-                userStore.userPosition !== undefined
-                  ? userStore.userPosition
-                  : coordinates[0]
-              }
-              destination={coordinates[coordinates.length - 1]}
-              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-              mode={'DRIVING'}
-              strokeWidth={2}
-              strokeColor="red"
-              optimizeWaypoints={false}
-              splitWaypoints={true}
-              strokeColors={[
-                'rgba(255, 255, 255, 0)',
-                'rgba(255, 255, 255, 1)',
-              ]}
+      <Map
+        coordinatesForMarker={coordinates}
+        center={coordinates[0]}
+        height={Dimensions.get('screen').height - 250}
+      >
+         
+      </Map>
+      <Button w="100%" h={100} onPress={onPressStart} disabled={loading}>
+        {loading ? (
+          <Center>
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              style={{
+                height: 150,
+                width: 150,
+              }}
             />
-          </Map>
-          <Button w="100%" h={100} onPress={onPressStart} disabled={loading}>
-            {loading ? (
-              <Center>
-                <ActivityIndicator
-                  size="large"
-                  color="#0000ff"
-                  style={{
-                    height: 150,
-                    width: 150,
-                  }}
-                />
-              </Center>
-            ) : isStart ? (
-              'Start'
-            ) : (
-              'Stop'
-            )}
-          </Button>
-        </View>
-      ) : null}
+          </Center>
+        ) : isStart ? (
+          'Start'
+        ) : (
+          'Stop'
+        )}
+      </Button>
     </View>
   );
 };

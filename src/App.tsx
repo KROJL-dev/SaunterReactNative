@@ -13,6 +13,7 @@ import AddPathModal from './containers/AddPathModal';
 import DisplayDirectionModal from './containers/DisplayDirectionModal';
 import AuthPage from './containers/AuthPage';
 
+import moduleName from 'module';
 import { NavigationStackProp } from 'react-navigation-stack';
 
 import { useStore } from './store/store';

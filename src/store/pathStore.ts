@@ -9,7 +9,7 @@ import { RootStore } from './store';
 
 import generateId from '../utils/generateId';
 
-export default class TodoStore {
+export default class PathStore {
   rootStore: RootStore;
   @observable pathList: IPath[] = [];
 

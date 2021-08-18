@@ -10,7 +10,6 @@ import { observer } from 'mobx-react';
 import { useStore } from '../store/store';
 
 import { NavigationStackProp } from 'react-navigation-stack';
- 
 
 interface IProps {
   path: IPath;
@@ -33,10 +32,12 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
     navigation !== undefined && navigation.navigate('DisplayDirectionModal');
   };
 
-  useEffect(()=>{
-       path.isFavourite ? setCurrentIcon(FAVOURITEICON) : setCurrentIcon(NOTFAVOURITEICON)
-  },[path.isFavourite])
-  
+  useEffect(() => {
+    path.isFavourite
+      ? setCurrentIcon(FAVOURITEICON)
+      : setCurrentIcon(NOTFAVOURITEICON);
+  }, [path.isFavourite]);
+
   return (
     <TouchableOpacity style={{ alignSelf: 'stretch' }} onPress={onPressCard}>
       <Flex
@@ -57,9 +58,12 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
           <Text style={style.title} w="100%">
             {path.title}
           </Text>
-          <View w="100%" style={style.description}>
+          <View w="100%">
             <ScrollView w="100%">
-              <Text w="100%"> {path.description}</Text>
+              <Text w="100%" style={style.description}>
+                {' '}
+                {path.description}
+              </Text>
             </ScrollView>
           </View>
         </Flex>
@@ -89,11 +93,11 @@ const style = StyleSheet.create({
   card: {
     marginBottom: 15,
     paddingHorizontal: 10,
-    height: Dimensions.get('screen').height / 8,
+    paddingVertical:20,
     backgroundColor: '#fff',
   },
   image: {
-    height: Dimensions.get('screen').height / 14,
+    height: 60,
     width: 60,
   },
   title: {
@@ -102,7 +106,7 @@ const style = StyleSheet.create({
     width: Dimensions.get('screen').width / 3,
   },
   description: {
-    maxHeight: Dimensions.get('screen').height / 8 - 80,
+    lineHeight:20,
   },
   directionSize: {},
 });
