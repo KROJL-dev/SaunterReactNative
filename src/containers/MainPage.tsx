@@ -30,6 +30,13 @@ interface IProps {
   navigation: NavigationStackProp<{ userId: string }>;
 }
 
+const sortByFavourite = (pathArr: IPath[]): IPath[] => {
+  let newPathList = _.cloneDeep(pathArr);
+  newPathList.sort((a, b) => {
+    return +b.isFavourite - +a.isFavourite;
+  });
+  return newPathList;
+};
 const MainPage: React.FC<IProps> = ({ navigation }) => {
   const { pathStore, userStore } = useStore();
 
@@ -57,9 +64,7 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
   }, [userStore.isCurrentUser]);
 
   useEffect(() => {
-    let newPathList = _.cloneDeep(pathStore.pathList);
-    newPathList.sort((a,b)=>{return (+b.isFavourite)-(+a.isFavourite)})
-    setCurrentPathList(newPathList);
+    setCurrentPathList(sortByFavourite(_.cloneDeep(pathStore.pathList)));
   }, [pathStore.pathList]);
 
   useEffect(() => {
@@ -68,18 +73,13 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
       tempArr = tempArr.filter((path) => path.isFavourite === true);
       setCurrentPathList(tempArr);
     } else {
-      let newPathList = _.cloneDeep(pathStore.pathList);
-      newPathList.sort((a, b) => {
-        return +b.isFavourite - +a.isFavourite;
-      });
-      setCurrentPathList(newPathList);
+      setCurrentPathList(sortByFavourite(_.cloneDeep(pathStore.pathList)));
     }
   }, [isFilter]);
 
   return (
     <View
       w="100%"
-      // style={{ borderStyle: 'solid', borderWidth: 5, borderColor: 'red' }}
     >
       <Center>
         <Container style={{ marginTop: 10 }}>
@@ -135,7 +135,6 @@ const style = StyleSheet.create({
     right: 0,
     height: Dimensions.get('screen').height,
     width: Dimensions.get('screen').width / 10.7,
-
     zIndex: -1,
   },
   filter: {
@@ -144,7 +143,7 @@ const style = StyleSheet.create({
     width: 100,
     position: 'absolute',
     left: -35,
-    top: Dimensions.get('screen').height/2-100,
+    top: Dimensions.get('screen').height / 2 - 100,
     transform: [{ rotate: '90deg' }],
   },
 });
