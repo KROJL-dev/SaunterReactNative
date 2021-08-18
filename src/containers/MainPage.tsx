@@ -57,7 +57,9 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
   }, [userStore.isCurrentUser]);
 
   useEffect(() => {
-    setCurrentPathList(_.cloneDeep(pathStore.pathList));
+    let newPathList = _.cloneDeep(pathStore.pathList);
+    newPathList.sort((a,b)=>{return (+b.isFavourite)-(+a.isFavourite)})
+    setCurrentPathList(newPathList);
   }, [pathStore.pathList]);
 
   useEffect(() => {
@@ -66,7 +68,11 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
       tempArr = tempArr.filter((path) => path.isFavourite === true);
       setCurrentPathList(tempArr);
     } else {
-      setCurrentPathList(pathStore.pathList);
+      let newPathList = _.cloneDeep(pathStore.pathList);
+      newPathList.sort((a, b) => {
+        return +b.isFavourite - +a.isFavourite;
+      });
+      setCurrentPathList(newPathList);
     }
   }, [isFilter]);
 
