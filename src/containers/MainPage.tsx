@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 
-import { Container, Center, Button, Flex, View, ScrollView } from 'native-base';
+import {
+  Container,
+  Center,
+  Button,
+  Flex,
+  View,
+  ScrollView,
+  Text,
+} from 'native-base';
 
 import { NavigationStackProp } from 'react-navigation-stack';
 
@@ -100,7 +108,11 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => setIsFilter(!isFilter)}
         style={style.filterBtn}
-      ></TouchableOpacity>
+      >
+        <Text w={Dimensions.get('screen').height} style={style.filter}>
+          Filter
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -119,5 +131,14 @@ const style = StyleSheet.create({
     width: Dimensions.get('screen').width / 10.7,
 
     zIndex: -1,
+  },
+  filter: {
+    lineHeight: 25,
+    fontSize: 25,
+    width: 100,
+    position: 'absolute',
+    left: -35,
+    top: Dimensions.get('screen').height/2-100,
+    transform: [{ rotate: '90deg' }],
   },
 });
