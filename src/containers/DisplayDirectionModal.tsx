@@ -42,6 +42,8 @@ const DisplayDirectionModal: React.FC<{}> = () => {
     } else {
       setLoading(true);
 
+      console.log("else")
+      
       let watchID = startWatcher((latitude: number, longitude: number) => {
         userStore.setUserPosition(latitude, longitude);
         setLoading(false);
@@ -53,6 +55,7 @@ const DisplayDirectionModal: React.FC<{}> = () => {
   };
 
   useEffect(() => {
+    pathStore.unsetCurrentDirectionSize();
     return () => {
       setIsStart(true);
       userStore.unsetUserPosition();

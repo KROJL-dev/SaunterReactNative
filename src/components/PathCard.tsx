@@ -81,7 +81,10 @@ const PathCard: React.FC<IProps> = ({ path, navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={style.deleteIcon}
-        onPress={() => pathStore.deletePath(path.id)}
+        onPress={() => {
+          pathStore.deletePath(path.id);
+          pathStore.unsetCurrentDirectionSize();
+        }}
       >
         <Image source={{ uri: DELETEICON }} alt="Kek" w="100%" h="100%" />
       </TouchableOpacity>

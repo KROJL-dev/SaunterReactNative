@@ -128,31 +128,33 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
-        {currentCoordinationForMarket.length>1 && (
-          <MapViewDirections
-            waypoints={currentCoordinationForMarket}
-            origin={
-              userStore.userPosition !== undefined
-                ? userStore.userPosition
-                : currentCoordinationForMarket[0]
-            }
-            destination={
-              currentCoordinationForMarket[
-                currentCoordinationForMarket.length - 1
-              ]
-            }
-            apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-            mode={'DRIVING'}
-            strokeWidth={2}
-            strokeColor="red"
-            optimizeWaypoints={false}
-            splitWaypoints={true}
-            strokeColors={[
-              'rgba(255, 255, 255, 0.2)',
-              'rgba(255, 255, 255, 1)',
-            ]}
-          />
-        )}
+        {currentCoordinationForMarket.length > 1 &&
+         <MapViewDirections
+              waypoints={currentCoordinationForMarket}
+              origin={
+                userStore.userPosition !== undefined
+                  ? userStore.userPosition
+                  : currentCoordinationForMarket[0]
+              }
+              destination={
+                currentCoordinationForMarket[
+                  currentCoordinationForMarket.length - 1
+                ]
+              }
+              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
+              mode={'DRIVING'}
+              strokeWidth={2}
+              strokeColor="red"
+              optimizeWaypoints={false}
+              splitWaypoints={true}
+              strokeColors={[
+                'rgba(255, 255, 255, 0.2)',
+                'rgba(255, 255, 255, 1)',
+              ]}
+              onReady={(result) => {
+                pathStore.setDirectionSize(result.distance);
+              }}
+            />}
 
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (

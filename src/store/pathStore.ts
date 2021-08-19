@@ -12,14 +12,23 @@ import generateId from '../utils/generateId';
 export default class PathStore {
   rootStore: RootStore;
   @observable pathList: IPath[] = [];
-
+  @observable currentDirectionSize: number = 0;
   @observable currentCordinatesForDisplay?: IDirectionData;
-  
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
   }
 
+  @action
+  setDirectionSize = (directionSize: number) => {
+    this.currentDirectionSize = directionSize;
+  };
+
+  unsetCurrentDirectionSize = () => {
+    this.currentDirectionSize = 0;
+  };
+  
   @action
   logoutPathList = () => {
     this.pathList = [];
@@ -35,12 +44,14 @@ export default class PathStore {
   };
 
   @action
-  deletePath = async(id:string)=>{
+  deletePath = async (id: string) => {
+    console.log('delete', this.pathList.length);
     let newPathList = _.cloneDeep(this.pathList);
-    newPathList=newPathList.filter((path) => path.id !== id);
-    this.pathList= newPathList
-  }
-  
+    newPathList = newPathList.filter((path) => path.id !== id);
+    this.pathList = newPathList;
+    console.log('deleteAfter', this.pathList.length);
+  };
+
   @action
   changeFavorite = async (id: string) => {
     if (this.rootStore.userStore.currentUser !== undefined) {
@@ -52,7 +63,7 @@ export default class PathStore {
         }
       });
       this.pathList = newPathList;
-      
+
       await AsyncStorage.setItem(
         `${this.rootStore.userStore.currentUser?.id}pathList`,
         JSON.stringify(this.pathList)

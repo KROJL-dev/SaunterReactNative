@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Center, Container, Input, Stack, Alert } from 'native-base';
 
-import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TextInput } from 'react-native';
 
 import { useForm, Controller } from 'react-hook-form';
 
 import { NavigationStackProp } from 'react-navigation-stack';
-
-import generateId from '../utils/generateId';
 
 import { Button } from 'native-base';
 
@@ -16,7 +14,9 @@ import { useStore } from '../store/store';
 
 import Map from '../components/Map';
 
-import { Marker, LatLng, MapEvent } from 'react-native-maps';
+import { LatLng, MapEvent } from 'react-native-maps';
+
+import { observer } from 'mobx-react';
 
 import MapViewDirections, {
   MapViewDirectionsWaypoints,
@@ -55,6 +55,13 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
     setCoordinate([...coordinate, e.nativeEvent.coordinate]);
   };
 
+  useEffect(() => {
+    setDirectionSize(pathStore.currentDirectionSize);
+  }, [pathStore.currentDirectionSize]);
+
+  useEffect(() => {
+   pathStore.unsetCurrentDirectionSize();
+  }, [ ]);
   return (
     <Center w={Dimensions.get('window').width} style={{ position: 'absolute' }}>
       <Container w="100%" style={styles.container}>
@@ -150,22 +157,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
         <Map
           onClick={onClickMap}
           coordinatesForMarker={coordinate as unknown as LatLng[]}
-        >
-          {coordinate.length > 1 && (
-            <MapViewDirections
-              waypoints={coordinate}
-              origin={coordinate[0]}
-              destination={coordinate[coordinate.length - 1]}
-              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-              strokeWidth={6}
-              strokeColor="red"
-              optimizeWaypoints={false}
-              onReady={(result) => {
-                setDirectionSize(result.distance);
-              }}
-            />
-          )}
-        </Map>
+        />
 
         <Center w="100%">
           <Container w="100%">
@@ -194,7 +186,7 @@ const AddPathModal: React.FC<IProps> = ({ navigation }) => {
     </Center>
   );
 };
-export default AddPathModal;
+export default observer(AddPathModal);
 
 const styles = StyleSheet.create({
   container: {

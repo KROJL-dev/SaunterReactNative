@@ -13,15 +13,22 @@ export const getCurrentPos = (succesCalbackFunction: Function) => {
   );
 };
 export const startWatcher = (succesCalbackFunction: Function) => {
+  console.log('startWatcher');
   return Geolocation.watchPosition(
     (position) => {
+      console.log('kek');
       succesCalbackFunction(
         position.coords.latitude,
         position.coords.longitude
       );
     },
     (error) => console.log('Error', JSON.stringify(error)),
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0, distanceFilter:1 }
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 1000,
+      distanceFilter: 3,
+    }
   );
 };
 export const stopWatcher = (watchId: number) => {
