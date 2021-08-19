@@ -15,6 +15,7 @@ import { observer } from 'mobx-react';
 import MapViewDirections from 'react-native-maps-directions';
 
 interface IProps {
+  children?: any;
   onClick?: Function;
   coordinatesForMarker?: LatLng[];
   height?: number;
@@ -32,6 +33,7 @@ const RADIUS = 0.000012;
 const USERICON = 'https://image.flaticon.com/icons/png/512/106/106175.png';
 
 const Map: React.FC<IProps> = ({
+  children,
   onClick,
   coordinatesForMarker,
   height = Dimensions.get('screen').height / 2.4,
@@ -39,11 +41,12 @@ const Map: React.FC<IProps> = ({
   center = DEFAULTCENTER,
 }) => {
   const { userStore, pathStore } = useStore();
-  
+
   const map = useRef<MapView>(null);
 
   const [isFirstUserIcon, setIsFirstUserIcon] = useState<boolean>(false);
-  const [currentCoordinationForMarket, setCurrentCoordinationForMarket] = useState<LatLng[]>([]);
+  const [currentCoordinationForMarket, setCurrentCoordinationForMarket] =
+    useState<LatLng[]>([]);
 
   const checkUserPositionAtMarkers = (
     markers: LatLng[],
@@ -75,7 +78,6 @@ const Map: React.FC<IProps> = ({
       setCurrentCoordinationForMarket(currentCoordForMarkTempArr);
 
       map.current?.getCamera().then((cam: Camera) => {
-         
         cam.center = currentCoordForMarkTempArr[0];
         map.current?.animateCamera(cam);
       });
@@ -126,34 +128,31 @@ const Map: React.FC<IProps> = ({
           });
         }}
       >
-        {currentCoordinationForMarket.length?useMemo(
-          () => (
-            <MapViewDirections
-              waypoints={currentCoordinationForMarket}
-              origin={
-                userStore.userPosition !== undefined
-                  ? userStore.userPosition
-                  : currentCoordinationForMarket[0]
-              }
-              destination={
-                currentCoordinationForMarket[
-                  currentCoordinationForMarket.length - 1
-                ]
-              }
-              apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
-              mode={'DRIVING'}
-              strokeWidth={2}
-              strokeColor="red"
-              optimizeWaypoints={false}
-              splitWaypoints={true}
-              strokeColors={[
-                'rgba(255, 255, 255, 0.2)',
-                'rgba(255, 255, 255, 1)',
-              ]}
-            />
-          ),
-          [currentCoordinationForMarket, userStore.userPosition]
-        ):null}
+        {currentCoordinationForMarket.length>1 && (
+          <MapViewDirections
+            waypoints={currentCoordinationForMarket}
+            origin={
+              userStore.userPosition !== undefined
+                ? userStore.userPosition
+                : currentCoordinationForMarket[0]
+            }
+            destination={
+              currentCoordinationForMarket[
+                currentCoordinationForMarket.length - 1
+              ]
+            }
+            apikey="AIzaSyC_uhizMxcvd4H0ku2IOf3-o0w4OvsKBZo"
+            mode={'DRIVING'}
+            strokeWidth={2}
+            strokeColor="red"
+            optimizeWaypoints={false}
+            splitWaypoints={true}
+            strokeColors={[
+              'rgba(255, 255, 255, 0.2)',
+              'rgba(255, 255, 255, 1)',
+            ]}
+          />
+        )}
 
         {currentCoordinationForMarket.length
           ? currentCoordinationForMarket.map((coordinate, index) => (
@@ -185,6 +184,7 @@ const Map: React.FC<IProps> = ({
               </Marker>
             ))
           : null}
+        {children !== undefined ? children : null}
       </MapView>
     </View>
   );
