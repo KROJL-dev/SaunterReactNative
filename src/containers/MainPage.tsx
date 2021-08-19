@@ -136,34 +136,55 @@ const MainPage: React.FC<IProps> = ({ navigation }) => {
               placeholder="search path"
               placeholderTextColor="black"
             />
-            {loading ? (
-              <Center>
-                <ActivityIndicator
-                  size="large"
-                  color="#0000ff"
-                  style={{
-                    height: 150,
-                    width: 150,
-                  }}
-                />
-              </Center>
-            ) : (
-              <Flex>
-                <View>
-                  <ScrollView style={{ marginVertical: 60 }}>
-                    {cureentPathList.length
-                      ? cureentPathList.map((path) => (
-                          <PathCard
-                            navigation={navigation}
-                            path={path}
-                            key={path.id}
-                          />
-                        ))
-                      : null}
-                  </ScrollView>
-                </View>
-              </Flex>
-            )}
+            {
+              loading ? (
+                <Center>
+                  <ActivityIndicator
+                    size="large"
+                    color="#0000ff"
+                    style={{
+                      height: 150,
+                      width: 150,
+                    }}
+                  />
+                </Center>
+              ) : cureentPathList.length ? (
+                <Flex>
+                  <View>
+                    <ScrollView style={{ marginVertical: 60 }}>
+                      {cureentPathList.length
+                        ? cureentPathList.map((path) => (
+                            <PathCard
+                              navigation={navigation}
+                              path={path}
+                              key={path.id}
+                            />
+                          ))
+                        : null}
+                    </ScrollView>
+                  </View>
+                </Flex>
+              ) : (
+                <Text style={{ lineHeight: 20, marginVertical: 60 }}>
+                  path not found
+                </Text>
+              )
+              // search.length&&!cureentPathList.length?<Flex>
+              //   <View>
+              //     <ScrollView style={{ marginVertical: 60 }}>
+              //       {cureentPathList.length
+              //         ? cureentPathList.map((path) => (
+              //             <PathCard
+              //               navigation={navigation}
+              //               path={path}
+              //               key={path.id}
+              //             />
+              //           ))
+              //         : null}
+              //     </ScrollView>
+              //   </View>
+              // </Flex>:<Text style={{lineHeight:20}}>path not found</Text>
+            }
 
             <Button
               w="100%"
