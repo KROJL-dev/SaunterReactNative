@@ -20,9 +20,16 @@ const FAVOURITEICON =
   'https://image.flaticon.com/icons/png/512/1828/1828614.png';
 const NOTFAVOURITEICON =
   'https://image.flaticon.com/icons/png/512/1828/1828970.png';
+  
 const LOGO = 'https://image.flaticon.com/icons/png/512/44/44755.png';
 
 const DELETEICON = 'https://image.flaticon.com/icons/png/512/1214/1214428.png';
+
+///TEST
+///TEST
+///TEST
+///TEST
+///TEST
 
 const PathCard: React.FC<IProps> = ({ path, navigation }) => {
   const { pathStore } = useStore();
