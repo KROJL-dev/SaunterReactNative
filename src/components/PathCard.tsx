@@ -25,6 +25,8 @@ const LOGO = 'https://image.flaticon.com/icons/png/512/44/44755.png';
 
 const DELETEICON = 'https://image.flaticon.com/icons/png/512/1214/1214428.png';
 
+const kek ="kekke"
+
 ///TEST
 ///TEST
 ///TEST
